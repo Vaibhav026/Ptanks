@@ -14,6 +14,8 @@ var tank1y=0;
 var tank2x=0;
 var tank2y=0;//		ctx.clearRect(0, 0, this.canvas.width+1, this.canvas.height+1);
 
+var soundID = "Tinkling";
+var soundID2 = "Gun";
 
 var scoreA=0;
 var scoreB=0;
@@ -34,8 +36,26 @@ function powerValue()
 	document.getElementById("powerbar").innerHTML="Power: "+ document.getElementById("power").value;
 }
 
+
+
+function playSound () {
+  createjs.Sound.play(soundID);
+}
+
+function playGun () {
+  createjs.Sound.play(soundID2);
+}
+
+function loadSound () {
+  createjs.Sound.registerSound("/static/bcg.mp3", soundID);
+  createjs.Sound.registerSound("/static/bomb.mp3", soundID2);
+}
+
+
+
 function init()
-{
+{	
+	loadSound();
 	console.log("Init function completed");
 	stage=new createjs.Stage("canvas");
 		// ctx= document.getElementById("canvas").getContext("2d");
@@ -80,7 +100,8 @@ function loginView()
 
 
 function checkDatabase()
-{
+{   
+	playSound();
 	var id=document.getElementById("username").value;
 	var pswd=document.getElementById("password").value;
 	var up={username:id,password:pswd};
@@ -342,7 +363,9 @@ socket.on('loginResponse',function(data){
 var first = 1;
 
 function attack(i)
-{		console.log('attacked');
+{		
+	    playGun();
+	    console.log('attacked');
 		power=parseInt(document.getElementById("power").value);
 		angle=parseInt(document.getElementById("angle").value);
 		
@@ -352,6 +375,7 @@ function attack(i)
 
 function attack2(i)
 {		
+		playGun();
 	    console.log('attacked B');
 		power = parseInt(document.getElementById("power").value);
 		angle = parseInt(document.getElementById("angle").value);
