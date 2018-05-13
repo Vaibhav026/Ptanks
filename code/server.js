@@ -11,6 +11,11 @@ var loginResult=false;
 
 var addScore=0;
 var hit = false;
+var player1="Pratik";
+var player2="Vaibhav";
+var countS=0;
+
+var playerCounter=0;
 
 app.set('port', 5000);
 app.use('/static', express.static(__dirname + '/static'));
@@ -46,6 +51,7 @@ var ypeak=400;//It contains y coordinate of peak;
 // var password2="";
 var tank1x,tank1y,tank2x,tank2y;
 // var userid2="";
+
 
 function createTerrain()
 {
@@ -173,6 +179,15 @@ function getLogin()
     // console.log(userid1);
 
   });
+  		connection.query("SELECT count(*) as C FROM Score", function (err, result, fields) {
+
+    // if (err) throw err;
+    var str=JSON.stringify(result);
+    var json=JSON.parse(str);
+    countS=json[0].C;
+    // console.log(userid1);
+
+  });
 
 });
 
@@ -184,6 +199,15 @@ function checkLogin(userid,password)
 	// console.log("GetLogin is working.");
 	connection.connect(function(err) {
   	// if (err) throw err;
+  	connection.query("SELECT count(*) as C FROM Score", function (err, result, fields) {
+
+    // if (err) throw err;
+    var str=JSON.stringify(result);
+    var json=JSON.parse(str);
+    countS=json[0].C;
+    // console.log(userid1);
+
+  });
   		connection.query("SELECT * FROM Login where id= '"+ userid +"'", function (err, result, fields) {
     if (result.length==1){
     var str=JSON.stringify(result);
@@ -191,7 +215,15 @@ function checkLogin(userid,password)
     
     if ( password == json[0].password )
     {	
-    	
+    	if(playerCounter==0)
+    	{
+    		player1=userid;
+    		playerCounter++;
+    	}
+    	else
+    	{
+    		player2=userid;
+    	}
     	loginResult = true;
     	// console.log("Inside function",loginResult);
     	// console.log("Found a match");
@@ -326,7 +358,29 @@ function attack2(tx,power,angle)
 
 
 
+function history(play)
+{
+	console.log("Inside history Function.");
+	connection.connect(function(err) {
+		var sql;
+		if(play.playerid==1)
+		{
+			sql="insert into Score values ("+(countS+1)+",'"+player1+"','"+play.scoreW+"','"+play.scoreL+"')";
+			
+		}
+		else
+		{
+			sql="insert into Score values ("+(countS+1)+",'"+player2+"','"+play.scoreW+"','"+play.scoreL+"')";
+		}
+  		// console.log("Second");
+  		connection.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log("Data Updated.");
+  
+  });
+});	
 
+}
 
 
 
@@ -422,6 +476,13 @@ socket.on('getTerrain', function(data) {
     
 	setTimeout(function(){socket.emit('Terrain', {terrain:terr,x:xpeak,y:ypeak,t1x:tank1x,t1y:tank1y,t2x:tank2x,t2y:tank2y});},1000 );
 		
+}
+);
+
+socket.on('history', function(data) {
+    console.log("PreHistory.");
+    history(data);		
+    console.log("PostHistory");
 }
 );
   

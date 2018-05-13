@@ -1,10 +1,10 @@
 var stage;
-
+var playerid="";
 var grap=new createjs.Graphics();
-		var attackBall;
+var attackBall;
 var acc=false;
 var view=-1;
-var canvas;	//=document.getElementById("canvas");
+var canvas;
 var ctx;
 var terr=[];
 var xpeak;
@@ -12,11 +12,13 @@ var ypeak;
 var tank1x=0;
 var tank1y=0;
 var tank2x=0;
-var tank2y=0;//		ctx.clearRect(0, 0, this.canvas.width+1, this.canvas.height+1);
-var  computer=0,env=1;
+var tank2y=0;
+var computer=0,env=1;
 var weapon=0;
 var soundID="Tinkling";
 var soundID2="Gun";
+
+var playerNum;
 
 var turn1=0;
 var turn2=0;
@@ -61,16 +63,30 @@ function init()
 	loadSound();
 	console.log("Init function completed");
 	stage=new createjs.Stage("canvas");
-		// ctx= document.getElementById("canvas").getContext("2d");
-		// ctx.setTransform(1, 0, 0, 1, 0, 0);
 	modal = document.getElementById('id01');
 	attackBall= createjs.Shape();
-	
 	canvas=document.getElementById("canvas");
-	// console.log(terr);
-
 }
 
+function restart()
+{
+ grap=new createjs.Graphics();
+ acc=false;
+ view=-1;
+ terr=[];
+ tank1x=0;
+ tank1y=0;
+ tank2x=0;
+ tank2y=0;
+ computer=0;
+ env=1;
+ weapon=0;
+ turn1=0;
+ turn2=0;
+ scoreA=0;
+ scoreB=0;
+
+}
 
 socket.on('Terrain',function(data){
 		console.log("Terrain Response");
@@ -107,8 +123,14 @@ function checkDatabase()
 	playSound();
 	var id=document.getElementById("username").value;
 	var pswd=document.getElementById("password").value;
+	playerid=id;
 	var up={username:id,password:pswd};
 	socket.emit('login',up);
+}
+
+function insertHistory()
+{
+	socket.emit('history',playerid);
 }
 
 function starter()
@@ -256,11 +278,22 @@ function aMotion()
 		{
 			if(scoreB>scoreA)
 			{
+				var d={playerid:2,scoreW:scoreB,scoreL:scoreA};
+				socket.emit("history",d);
 				alert("Congratulations Player2");
 			}
 			else
 			{
-				alert("Congratulations Player1");	
+				if(scoreB<scoreA){
+				var d={playerid:1,scoreW:scoreA,scoreL:scoreB};
+				socket.emit("history",d);
+				alert("Congratulations Player1");
+				}
+				else
+				{
+					alert("It is a draw.");		
+				}
+
 			}
 		}
     }
@@ -378,7 +411,7 @@ var first = 1;
 
 function attack(i)
 {		
-	if(turn1==turn2){
+	if(turn1==turn2 && turn1<=9){
 		playGun();
 		// console.log('attacked');
 		power=parseInt(document.getElementById("power").value);
@@ -391,14 +424,20 @@ function attack(i)
 	}
 	else
 	{
-		alert("You can only attack once.");
-	}
-}	
+		if(turn1>10)
+		{
+			alert("Match is Over.(Restart the server for another match.)")
+		}
+		else
+			alert("You can only attack once.");
+
+		}	
+}
 
 function attack2(i)
 {		
 
-		if(turn2+1==turn1){
+		if(turn2+1==turn1 && turn1<=10){
 			playGun();
 	    // console.log('attacked B');
 		power = parseInt(document.getElementById("power").value);
@@ -427,7 +466,12 @@ function attack2(i)
 	}
 	else
 	{
-		alert("You can only attack once.");
+		if(turn1>10)
+		{
+			alert("Match is Over.(Restart the server for another match.)")
+		}
+		else
+			alert("You can only attack once.");
 	}
 }
 
