@@ -37,7 +37,7 @@ setInterval(function() {
 
 var connection=mysql.createConnection(
 {
-	host:"localhost",user:"root",password:"1111",database:"PocketTank"
+	host:"localhost",user:"root",password:"8p16ff0015",database:"PocketTank"
 });
 
 
@@ -408,6 +408,49 @@ io.on('connection', function(socket) {
     // console.log(data);
     io.sockets.emit('chat', data);
   });	
+
+  socket.on('forward',function(data){
+
+  if(tank1x<=800){	
+  tank1x += 10;
+  tank1y = terr[tank1x];
+  io.sockets.emit('t1',{a:tank1x,b:tank1y});	
+  }
+  });
+
+  socket.on('behind',function(data){
+
+  if(tank1x>=25){	
+  tank1x -= 10;
+  tank1y = terr[tank1x];
+  io.sockets.emit('t1',{a:tank1x,b:tank1y});	
+  }
+  });	  
+
+
+  socket.on('forward2',function(data){
+
+  if(tank2x>=20){	
+  tank2x -= 10;
+  tank2y = terr[tank2x];
+  io.sockets.emit('t2',{a:tank2x,b:tank2y});	
+  }
+  });
+
+  socket.on('behind2',function(data){
+
+  if(tank2x <= 900){	
+  tank2x += 10;
+  tank2y = terr[tank2x];
+  io.sockets.emit('t2',{a:tank2x,b:tank2y});	
+  }
+  });
+
+
+
+
+
+
 
 
 
