@@ -162,16 +162,20 @@ var attackC=[];
 
 var slope1=0;
 
+img1=new createjs.Bitmap("/static/tank.png");
+
+img2=new createjs.Bitmap("/static/tank2.png");
+
 function tanks()
 {
 	// console.log(tank1x+"T1x"+tank1y+"T1y"+tank2x+"T2x"+tank2y+"T2y");
-	img1=new createjs.Bitmap("/static/tank.png");
+	
 	img1.x=tank1x-20;
 	img1.y=tank1y-20;
 	img1.scaleX=img1.scaleY=0.05;
 	img1.rotation=-20;
 	stage.addChild(img1);
-	img2=new createjs.Bitmap("/static/tank2.png");
+	
 	img2.x=tank2x+5;
 	img2.y=tank2y-20;
 	img2.scaleX=img2.scaleY=0.05;
@@ -180,6 +184,33 @@ function tanks()
 	stage.update();
 }
 
+function forward(){
+	
+	socket.emit('forward',true);
+
+}
+
+function behind(){
+	
+	socket.emit('behind',true);
+
+}
+
+function forward2(){
+	
+	socket.emit('forward2',true);
+
+}
+
+function behind2(){
+	
+	socket.emit('behind2',true);
+
+}
+
+socket.on('t1',function(data){  tank1x = data.a;  tank1y = data.b; img1.x= tank1x-20; img1.y = tank1y -20; stage.update(); }); 
+
+socket.on('t2',function(data){  tank2x = data.a;  tank2y = data.b; img2.x= tank2x+5; img2.y = tank2y -20; stage.update(); }); 
 function backButton()
 {
 	var btn=new createjs.Shape();
