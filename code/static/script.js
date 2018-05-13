@@ -449,7 +449,7 @@ function attack(i)
 	}
 	else
 	{
-		if(turn1>10)
+		if(turn1>=10)
 		{
 			alert("Match is Over.(Restart the server for another match.)")
 		}
