@@ -128,11 +128,6 @@ function checkDatabase()
 	socket.emit('login',up);
 }
 
-function insertHistory()
-{
-	socket.emit('history',playerid);
-}
-
 function starter()
 {
 	// ctx.clearRect(0, 0, this.canvas.width+1, this.canvas.height+1);
@@ -420,7 +415,6 @@ socket.on('loginResponse',function(data){
 	{
 		// console.log("")
 		view=0;
-		// console.log("Hello");
 		modal.style.display="none";
 		alert("Make sure to Select Battle Mode and Environment.");
 		

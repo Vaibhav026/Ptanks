@@ -11,8 +11,8 @@ var loginResult=false;
 
 var addScore=0;
 var hit = false;
-var player1="Pratik";
-var player2="Vaibhav";
+var player1="";
+var player2="Computer";
 var countS=0;
 
 var playerCounter=0;
@@ -23,6 +23,11 @@ app.use('/static', express.static(__dirname + '/static'));
 // Routing
 app.get('/Game', function(request, response) {
   response.sendFile(path.join(__dirname, 'index.html'));
+  // getLogin();
+});
+
+app.get('/History', function(request, response) {
+  response.sendFile(path.join(__dirname, 'History.html'));
   // getLogin();
 });
 
@@ -37,7 +42,7 @@ setInterval(function() {
 
 var connection=mysql.createConnection(
 {
-	host:"localhost",user:"root",password:"8p16ff0015",database:"PocketTank"
+	host:"localhost",user:"root",password:"1111",database:"PocketTank"
 });
 
 
@@ -179,18 +184,8 @@ function getLogin()
     // console.log(userid1);
 
   });
-  		connection.query("SELECT count(*) as C FROM Score", function (err, result, fields) {
-
-    // if (err) throw err;
-    var str=JSON.stringify(result);
-    var json=JSON.parse(str);
-    countS=json[0].C;
-    // console.log(userid1);
-
-  });
-
+  		
 });
-
 }
 
 
@@ -199,49 +194,38 @@ function checkLogin(userid,password)
 	// console.log("GetLogin is working.");
 	connection.connect(function(err) {
   	// if (err) throw err;
-  	connection.query("SELECT count(*) as C FROM Score", function (err, result, fields) {
-
-    // if (err) throw err;
-    var str=JSON.stringify(result);
-    var json=JSON.parse(str);
-    countS=json[0].C;
-    // console.log(userid1);
-
-  });
-  		connection.query("SELECT * FROM Login where id= '"+ userid +"'", function (err, result, fields) {
-    if (result.length==1){
-    var str=JSON.stringify(result);
-    var json=JSON.parse(str);
-    
-    if ( password == json[0].password )
-    {	
-    	if(playerCounter==0)
-    	{
-    		player1=userid;
-    		playerCounter++;
-    	}
+ 
+ 	connection.query("SELECT * FROM Login where id= '"+ userid +"'", function (err, result, fields) {
+   
+    if(result.length==1)
+    {
+   	 	var str=JSON.stringify(result);
+    	var json=JSON.parse(str);
+    	console.log("Hello");
+    	if ( password == json[0].password )
+    	{	
+	    	if(playerCounter==0)
+	    	{
+	    		player1=userid;
+	    		playerCounter++;
+	    		console.log(player1);
+	    	}
+	    	else
+	    	{
+	    		player2=userid;
+	    		console.log(player2);
+	    	}
+	    	loginResult = true;
+	    }
     	else
     	{
-    		player2=userid;
-    	}
-    	loginResult = true;
-    	// console.log("Inside function",loginResult);
-    	// console.log("Found a match");
-        
-    	// socket.broadcast.emit('loginResponse', true);
-    }
-    else
-    {
-    	loginResult = false;
-    	// console.log("No match found");
-    	// socket.broadcast.emit('loginResponse', false);
-	}
+    		loginResult = false;
+		}
 	
 	}
 	else
 	{
 		loginResult = false;
-    	// console.log("Username Wrong");
 	}
   });
 });
@@ -297,6 +281,19 @@ function attack(tx,power,angle)
 	//console.log(attackC);
 }
 
+var content=[];
+
+function tableHistory()
+{
+	connection.connect(function(err) {
+  	connection.query("SELECT * FROM Score", function (err, result, fields) {
+   
+     	var str=JSON.stringify(result);
+    	var json=JSON.parse(str);
+    	content=json;	
+  });
+});
+}
 
 function attack2(tx,power,angle)
 {	
@@ -365,12 +362,12 @@ function history(play)
 		var sql;
 		if(play.playerid==1)
 		{
-			sql="insert into Score values ("+(countS+1)+",'"+player1+"','"+play.scoreW+"','"+play.scoreL+"')";
+			sql="insert into Score values ('"+player1+"','"+play.scoreW+"','"+play.scoreL+"')";
 			
 		}
 		else
 		{
-			sql="insert into Score values ("+(countS+1)+",'"+player2+"','"+play.scoreW+"','"+play.scoreL+"')";
+			sql="insert into Score values ('"+player2+"','"+play.scoreW+"','"+play.scoreL+"')";
 		}
   		// console.log("Second");
   		connection.query(sql, function (err, result) {
@@ -528,7 +525,15 @@ socket.on('history', function(data) {
     console.log("PostHistory");
 }
 );
-  
+
+socket.on('getHistory', function(data) {
+    // console.log("PreHistory.");
+    tableHistory();		
+    setTimeout(function(){socket.emit('setHistory', content);},2000 );
+	
+}
+);
+    
 
 });
 
