@@ -389,7 +389,7 @@ select {
 	<div align="center">
 		<div>
 	<select id="weapon" style="width: 250px;">
-		    <option value="0">Select Mode:</option>
+		    <option value="0">Select Weapon:</option>
 		    <option value="0">Small Shot</option>
 		    <option value="1">Big Shot</option>
 		    <option value="2">Fireball</option>
@@ -398,7 +398,11 @@ select {
 	<ul>
 	<li style="float: left;">
 		<button class ="button button1"  id="attack1" onclick="attack(1)">
-		Attack Player 1</button>
+		Attack Player 1</button>      <button class ="button button1" style="width: 10%;text-align: left;" id="moveahead" onclick="forward()">
+		P1 &rarr; </button>
+	      <button class ="button button1" style="width: 10%;text-align: left;"  id="movebehind" onclick="behind()">
+		P1 &larr;</button>
+	
 	</li>
 	<li>
 		<div align="center" style="float: center;">
@@ -419,6 +423,11 @@ select {
 	</li>
 	<li style="float: right;">
 		<button class ="button button3" id="attack2"  onclick="attack2(2)">Attack Player 2</button>
+		      <button class ="button button3" style="width: 10%;text-align: left;"  id="2ndtankf" onclick="forward2()">
+		P2 &rarr; </button>
+	      <button class ="button button3" style="width: 10%;text-align: left;"  id="2ndtankback" onclick="behind2()">
+		P2 &larr;</button>
+	
 	</li>
 
 	</ul>
@@ -463,27 +472,11 @@ select {
 	  </form>
 	</div>
 	
-	<div class="container" style="background-color:#f1f1f1">
-	      <button class ="button button1"  id="moveahead" onclick="forward()">
-		forwardfirst </button>
-		</div>
-
-		<div class="container" style="background-color:#f1f1f1">
-	      <button class ="button button1"  id="movebehind" onclick="behind()">
-		behindfirst</button>
-		</div>
-
-	<div class="container" style="background-color:#f1f1f1">
-	      <button class ="button button1"  id="2ndtankf" onclick="forward2()">
-		forward2nd </button>
-		</div>
-
-		<div class="container" style="background-color:#f1f1f1">
-	      <button class ="button button1"  id="2ndtankback" onclick="behind2()">
-		behind2nd</button>
-		</div>	
 		<div align="center">
-			<a href="/History">Show History</a>
+			<button class="button button1" onclick="window.open('/History')" >
+				Show History	
+			</button>
+			
 		</div>
 
 </body>

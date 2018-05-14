@@ -360,7 +360,13 @@ select {
 
 </head>
 <body onload="showHistory()">
+	<h1 align="center" style="color: white;">History</h1>
+	<br>
+	<div id="divtable">
 		
+	</div>
+	<button style="float: left;" onclick="clearHistory()">Clear History</button>
+	<button style="float: right;" onclick="window.open('/Game')">Go Back to Game</button>
 </body>
 	<script src="/socket.io/socket.io.js"></script>
 	<script type="text/javascript" src="/static/script1.js"></script>

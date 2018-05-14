@@ -379,6 +379,18 @@ function history(play)
 
 }
 
+function deleteHistory()
+{
+	connection.connect(function(err)
+	{
+		var sql="delete from Score;"
+		connection.query(sql,function(err,result)
+		{
+			if(err) throw err;
+				console.log("Data Deleted.");
+		});
+	});
+}
 
 
 
@@ -529,6 +541,16 @@ socket.on('history', function(data) {
 socket.on('getHistory', function(data) {
     // console.log("PreHistory.");
     tableHistory();		
+    setTimeout(function(){socket.emit('setHistory', content);},2000 );
+	
+}
+);
+
+socket.on('clearHistory', function(data) {
+    // console.log("PreHistory.");
+    deleteHistory();
+    tableHistory();
+    content={};		
     setTimeout(function(){socket.emit('setHistory', content);},2000 );
 	
 }

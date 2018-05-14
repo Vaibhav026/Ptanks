@@ -4,15 +4,27 @@ socket.on('message', function(data) {
 });
 
 var x=0;
-
+var table;
+var btn;
 function showHistory()
 {
 	socket.emit('getHistory',x);
 }
 
+function clearHistory()
+{
+	table.parentNode.removeChild(table);
+	socket.emit('clearHistory',x);
+}
+
 socket.on('setHistory',function(data)
 {
-	var table = document.createElement('table');
+	var divv=document.getElementById("divtable");
+	table = document.createElement('table');
+	btn=document.createElement('button');
+	btn.value="Back to Game";
+	// btn.onclick=clearHistory();
+	// btn.setAttribute("")
 	table.style.background="white";
 //	table.style.text-align="center";
 
@@ -65,5 +77,6 @@ for (var i = 1; i <= data.length; i++){
 
     table.appendChild(tr);
 }
-document.body.appendChild(table);
+divv.appendChild(table);
+// document.body.appendChild(btn);
 });
