@@ -32,7 +32,7 @@ setInterval(function() {
 
 var connection=mysql.createConnection(
 {
-	host:"localhost",user:"root",password:"8p16ff0015",database:"PocketTank"
+	host:"localhost",user:"root",password:"1111",database:"PocketTank"
 });
 
 
